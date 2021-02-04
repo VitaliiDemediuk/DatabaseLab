@@ -1,6 +1,8 @@
-# Build directory
+# My ignore
 cmake-build-debug
 .idea
+*.fl
+*.ind
 
 # Created by .ignore support plugin (hsz.mobi)
 ### C template

@@ -1,6 +1,9 @@
 #include <stdio.h>
+#include <glib.h>
+#include "dbfunctions.h"
+#include "configurations.h"
 
 int main() {
-    printf("Hello, World!\n");
+
     return 0;
 }
