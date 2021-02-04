@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-typedef struct goods {
+typedef struct _Goods {
     int pk_id;
     char name[50];
     int price;
@@ -16,7 +16,7 @@ typedef struct goods {
     int next_id;
 } Goods;
 
-typedef struct category {
+typedef struct _Category {
     int pk_id;
     char name[50];
     char about[200];

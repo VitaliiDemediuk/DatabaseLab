@@ -14,4 +14,6 @@ INCLUDE_DIRECTORIES(
 
 LINK_DIRECTORIES(${GLIB_LIBRARY_DIRS})
 
-add_executable(DatabaseLab main.c dbfunctions.c dbfunctions.h configurations.h tables.h tables.c)
+add_executable(DatabaseLab main.c dbfunctions.c dbfunctions.h configurations.h tables.h tables.c indextables.c indextables.h)
+
+TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME} ${GLIB_LIBRARIES})
