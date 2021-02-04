@@ -29,8 +29,9 @@ void print_whole_goods(Goods *record);
 void print_category(Category *record);
 void print_whole_category(Category *record);
 
-Goods* read_goods(FILE* file, int pos);
-Category* read_category(FILE* file, int pos);
+
+Goods* read_goods(int pos);
+Category* read_category(int pos);
 
 Goods* scan_goods();
 Category* scan_category();
