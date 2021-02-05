@@ -29,6 +29,11 @@ void print_whole_goods(Goods *record);
 void print_category(Category *record);
 void print_whole_category(Category *record);
 
+//if pos == -1, write record to the end of file!
+void write_goods(Goods* record, int pos);
+
+//if pos == -1, write record to the end of file!
+void write_category(Category* record, int pos);
 
 Goods* read_goods(int pos);
 Category* read_category(int pos);

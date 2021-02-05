@@ -22,6 +22,6 @@ int trash_pop(Stack* trash_stack);
 
 int trash_peek(Stack* trash_stack);
 
-bool trash_size(Stack* trash_stack);
+bool trash_is_empty(Stack* trash_stack);
 
 #endif //DATABASELAB_TRASHSTACK_H

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tables.h"
-
+#include "indextables.h"
 #include "configurations.h"
 
 void print_goods(Goods *record){
@@ -48,8 +48,37 @@ void print_whole_category(Category *record){
            record->first_slave_id);
 }
 
+//if pos == -1, write record to the end of file!
+void write_goods(Goods* record, int pos){
+    if(pos == -1){
+        FILE* file = fopen(GOODS_FILE, "ab");
+        fwrite(record, 1, sizeof(Goods), file);
+        fclose(file);
+    }else{
+        FILE* file = fopen(GOODS_FILE, "rb+");
+        fseek(file, sizeof(Goods)*pos, SEEK_SET);
+        fwrite(record, 1, sizeof(Goods), file);
+        fclose(file);
+    }
+}
+
+
+//if pos == -1, write record to the end of file!
+void write_category(Category* record, int pos){
+    if(pos == -1){
+        FILE* file = fopen(CATEGORIES_FILE, "ab");
+        fwrite(record, 1, sizeof(Category), file);
+        fclose(file);
+    }else{
+        FILE* file = fopen(CATEGORIES_FILE, "rb+");
+        fseek(file, sizeof(Category)*pos, SEEK_SET);
+        fwrite(record, 1, sizeof(Category), file);
+        fclose(file);
+    }
+}
+
 Goods* read_goods(int pos){
-    FILE* file = fopen(CATEGORIES_FILE, "rb");
+    FILE* file = fopen(GOODS_FILE, "rb");
     fseek(file, sizeof(Goods)*pos, SEEK_SET);
     Goods* record = (Goods*)malloc(sizeof(Goods));
     fread(record, 1, sizeof(Goods), file);
@@ -58,7 +87,7 @@ Goods* read_goods(int pos){
 }
 
 Category* read_category(int pos){
-    FILE* file = fopen(GOODS_FILE, "rb");
+    FILE* file = fopen(CATEGORIES_FILE, "rb");
     fseek(file, sizeof(Category)*pos, SEEK_SET);
     Category* record = (Category*)malloc(sizeof(Category));
     fread(record, 1, sizeof(Category), file);
@@ -99,8 +128,6 @@ Goods* scan_goods(){
     printf("COUNT: ");
     scanf("%d", &record->count);
 
-    record->next_id = -1;
-
     return record;
 }
 
@@ -117,9 +144,6 @@ Category* scan_category(){
     printf("ABOUT: ");
     getchar();
     scanf("%[^\n]", record->about);
-
-    printf("PK_ID: ");
-    scanf("%d", &record->first_slave_id);
 
     record->first_slave_id = -1;
 

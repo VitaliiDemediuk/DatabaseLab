@@ -13,10 +13,10 @@ Stack* get_goods_trash_stack(){
     return &goods_trash_stack;
 }
 
-void trash_push(Stack* trash_stack, int pos){
+void trash_push(Stack* trash_stack, int pk_id){
     Node* new_node = (Node *)malloc(sizeof(Node));
     new_node->next = trash_stack->head;
-    new_node->element = pos;
+    new_node->element = pk_id;
     trash_stack->head = new_node;
 }
 
