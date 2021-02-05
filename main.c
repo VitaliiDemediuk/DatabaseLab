@@ -13,7 +13,6 @@ int main() {
     char command[50];
     while(true) {
         scanf("%s", command);
-//        getchar();
         if (strcmp(command, "get-m") == 0) {
             get_m();
         } else if (strcmp(command, "get-s") == 0) {

@@ -59,9 +59,36 @@ void del_m(){
 void del_s(){
     int pk_id;
     scanf("%d", &pk_id);
-    IndexTableRow* per_row = goods_index_table_get(pk_id);
-    per_row->is_deleted = true;
-    trash_push(get_goods_trash_stack(), per_row->position);
+    IndexTableRow* goods_row = goods_index_table_get(pk_id);
+    if(goods_row != NULL && !goods_row->is_deleted) {
+        Goods *del_goods = read_goods(goods_row->position);
+        goods_row->is_deleted = true;
+        trash_push(get_category_trash_stack(), pk_id);
+
+        Category *per_category = read_category(categories_index_table_get(del_goods->fk_category_id)->position);
+        if(per_category->first_slave_id == del_goods->pk_id){
+            per_category->first_slave_id = del_goods->next_id;
+            write_category(per_category, categories_index_table_get(per_category->pk_id)->position);
+        }else{
+            int pk_id_slave = per_category->first_slave_id;
+            Goods *slave;
+            int slave_next_id;
+            do {
+                slave = read_goods(goods_index_table_get(pk_id_slave)->position);
+                slave_next_id = slave->next_id;
+                if(slave_next_id != del_goods->pk_id){
+                    free(slave);
+                }
+            }while(slave_next_id != del_goods->pk_id);
+            slave->next_id = del_goods->next_id;
+            write_goods(slave, goods_index_table_get(slave->pk_id)->position);
+        }
+        free(per_category);
+        free(del_goods);
+    }else{
+        printf("Invalid pk_id\n");
+        return;
+    }
 }
 
 void update_m(){
