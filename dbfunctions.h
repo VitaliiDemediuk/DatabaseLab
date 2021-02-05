@@ -3,20 +3,20 @@
 
 #include "tables.h"
 
-int get_m(int pk_id);
-int get_s(int pk_id);
+void get_m();
+void get_s();
 
-int del_m(int pk_id);
-int del_s(int pk_id);
+void del_m();
+void del_s();
 
-int update_m();
-int update_s();
+void update_m();
+void update_s();
 
-int insert_m();
-int insert_s();
+void insert_m();
+void insert_s();
 
-int calc_m(int id);
-int cals_s(int id);
+void calc_m();
+void calc_s();
 
 void ut_m();
 void ut_s();

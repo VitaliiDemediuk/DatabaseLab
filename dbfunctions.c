@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "dbfunctions.h"
 #include "tables.h"
 #include "configurations.h"
 #include "indextables.h"
 #include "trashstack.h"
 
-int get_m(int pk_id){
+void get_m(){
+    int pk_id;
+    scanf("%d", &pk_id);
     IndexTableRow* per_row = categories_index_table_get(pk_id);
     if(per_row != NULL && !per_row->is_deleted) {
         Category *per_category_row = read_category(per_row->position);
@@ -16,7 +19,9 @@ int get_m(int pk_id){
     }
 }
 
-int get_s(int pk_id){
+void get_s(){
+    int pk_id;
+    scanf("%d", &pk_id);
     IndexTableRow* per_row = goods_index_table_get(pk_id);
     if(per_row != NULL && !per_row->is_deleted) {
         Goods *per_category_row = read_goods(per_row->position);
@@ -26,7 +31,109 @@ int get_s(int pk_id){
     }
 }
 
-int insert_m(){
+void del_m(){
+    int pk_id;
+    scanf("%d", &pk_id);
+    IndexTableRow* categories_row = categories_index_table_get(pk_id);
+    if(categories_row != NULL && !categories_row->is_deleted) {
+        Category *del_category = read_category(categories_row->position);
+        categories_row->is_deleted = true;
+        trash_push(get_category_trash_stack(), pk_id);
+
+        int slave_id = del_category->first_slave_id;
+        while (slave_id != -1) {
+            IndexTableRow *goods_row = goods_index_table_get(slave_id);
+            Goods *del_goods = read_goods(goods_row->position);
+            goods_row->is_deleted = true;
+            trash_push(get_goods_trash_stack(), del_goods->pk_id);
+            slave_id = del_goods->next_id;
+            free(del_goods);
+        }
+        free(del_category);
+    }else{
+        printf("Invalid pk_id\n");
+        return;
+    }
+}
+
+void del_s(){
+    int pk_id;
+    scanf("%d", &pk_id);
+    IndexTableRow* per_row = goods_index_table_get(pk_id);
+    per_row->is_deleted = true;
+    trash_push(get_goods_trash_stack(), per_row->position);
+}
+
+void update_m(){
+    int pw_id;
+    char field[50];
+    scanf("%d %s", &pw_id, field);
+    IndexTableRow* index_table_row = categories_index_table_get(pw_id);
+    if(index_table_row != NULL && !index_table_row->is_deleted) {
+        Category *category_to_update = read_category(index_table_row->position);
+        if (strcmp(field, "pw_id") == 0) {
+            scanf("%d", &category_to_update->pk_id);
+        } else if (strcmp(field, "name") == 0) {
+            getchar();
+            scanf("%[^\n]", category_to_update->name);
+        } else if (strcmp(field, "about") == 0) {
+            getchar();
+            scanf("%[^\n]", category_to_update->about);
+        } else {
+            printf("Invalid field\n");
+            return;
+        }
+        write_category(category_to_update, index_table_row->position);
+        free(category_to_update);
+    }else{
+        printf("Invalid pk_id\n");
+        return;
+    }
+}
+
+void update_s(){
+    int pw_id;
+    char field[50];
+    scanf("%d %s", &pw_id, field);
+    IndexTableRow* index_table_row = goods_index_table_get(pw_id);
+    if(index_table_row != NULL && !index_table_row->is_deleted) {
+        Goods *goods_to_update = read_goods(index_table_row->position);
+        if (strcmp(field, "pw_id") == 0) {
+            scanf("%d", &goods_to_update->pk_id);
+        } else if (strcmp(field, "name") == 0) {
+            getchar();
+            scanf("%[^\n]", goods_to_update->name);
+        } else if (strcmp(field, "price") == 0) {
+            scanf("%d", &goods_to_update->price);
+        } else if (strcmp(field, "sale_price") == 0) {
+            scanf("%d", &goods_to_update->sale_price);
+        } else if (strcmp(field, "sale_price") == 0) {
+            scanf("%d", &goods_to_update->sale_price);
+        } else if (strcmp(field, "description") == 0) {
+            getchar();
+            scanf("%[^\n]", goods_to_update->description);
+        } else if (strcmp(field, "description") == 0) {
+            getchar();
+            scanf("%[^\n]", goods_to_update->description);
+        } else if (strcmp(field, "count") == 0) {
+            scanf("%d", &goods_to_update->count);
+        } else if (strcmp(field, "fk_category_id") == 0) {
+            scanf("%d", &goods_to_update->fk_category_id);
+        } else if (strcmp(field, "fk_section_id") == 0) {
+            scanf("%d", &goods_to_update->fk_section_id);
+        } else {
+            printf("Invalid field\n");
+            return;
+        }
+        write_goods(goods_to_update, index_table_row->position);
+        free(goods_to_update);
+    }else{
+        printf("Invalid pk_id\n");
+        return;
+    }
+}
+
+void insert_m(){
     Category* record = scan_category();
     Stack* trash_stack = get_category_trash_stack();
     int pos;
@@ -46,7 +153,7 @@ int insert_m(){
     free(record);
 }
 
-int insert_s(){
+void insert_s(){
     Goods* record = scan_goods();
     Stack* trash_stack = get_goods_trash_stack();
 
@@ -72,6 +179,14 @@ int insert_s(){
     goods_index_table_insert(record->pk_id, row);
     free(per_category_row);
     free(record);
+}
+
+void calc_m(){
+    printf("%d\n", get_categories_row_number() - trash_size(get_category_trash_stack()));
+}
+
+void calc_s(){
+    printf("%d\n", get_goods_row_number() - trash_size(get_goods_trash_stack()));
 }
 
 void ut_m(){
