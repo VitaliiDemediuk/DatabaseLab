@@ -17,8 +17,10 @@ int main() {
             get_m();
         } else if (strcmp(command, "get-s") == 0) {
             get_s();
-        } else if (strcmp(command, "get-s") == 0) {
-            get_s();
+        } else if (strcmp(command, "get-m-all") == 0) {
+            get_all_m();
+        } else if (strcmp(command, "get-s-all") == 0) {
+            get_all_s();
         } else if (strcmp(command, "del-m") == 0) {
             del_m();
         } else if (strcmp(command, "del-s") == 0) {

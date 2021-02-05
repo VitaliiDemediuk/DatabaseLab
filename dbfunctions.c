@@ -31,6 +31,31 @@ void get_s(){
     }
 }
 
+void get_all_m(){
+    Category record;
+    FILE* file = fopen(CATEGORIES_FILE, "rb");
+    while(!feof(file)){
+        if(fread(&record, 1, sizeof(record), file) > 0 &&
+            !categories_index_table_get(record.pk_id)->is_deleted){
+            print_category(&record);
+        }
+    }
+    fclose(file);
+}
+
+void get_all_s(){
+    Goods record;
+    FILE* file = fopen(GOODS_FILE, "rb");
+    while(!feof(file)){
+        if(fread(&record, 1, sizeof(record), file) > 0 &&
+            !goods_index_table_get(record.pk_id)->is_deleted){
+            print_goods(&record);
+        }
+    }
+    fclose(file);
+
+}
+
 void del_m(){
     int pk_id;
     scanf("%d", &pk_id);

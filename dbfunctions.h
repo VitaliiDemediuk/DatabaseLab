@@ -6,6 +6,9 @@
 void get_m();
 void get_s();
 
+void get_all_m();
+void get_all_s();
+
 void del_m();
 void del_s();
 
